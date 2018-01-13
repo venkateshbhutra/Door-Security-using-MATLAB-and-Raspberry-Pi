@@ -1,0 +1,214 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang16393{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.14393}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 function varargout = untitled(varargin)\par
+% UNTITLED MATLAB code for untitled.fig\par
+% UNTITLED, by itself, creates a new UNTITLED or raises the existing\par
+% singleton*.\par
+%\par
+% H = UNTITLED returns the handle to a new UNTITLED or the handle to\par
+% the existing singleton*.\par
+%\par
+% UNTITLED('CALLBACK',hObject,eventData,handles,...) calls the local\par
+% function named CALLBACK in UNTITLED.M with the given input arguments.\par
+%\par
+% UNTITLED('Property','Value',...) creates a new UNTITLED or raises the\par
+% existing singleton*. Starting from the left, property value pairs are\par
+% applied to the GUI before untitled_OpeningFcn gets called. An\par
+% unrecognized property name or invalid value makes property application\par
+% stop. All inputs are passed to untitled_OpeningFcn via varargin.\par
+%\par
+% *See GUI Options on GUIDE's Tools menu. Choose "GUI allows only one\par
+% instance to run (singleton)".\par
+%\par
+% See also: GUIDE, GUIDATA, GUIHANDLES\par
+% Edit the above text to modify the response to help untitled\par
+% Last Modified by GUIDE v2.5 04-Nov-2016 20:52:17\par
+% Begin initialization code - DO NOT EDIT\par
+gui_Singleton = 1;\par
+gui_State = struct('gui_Name', mfilename, ...\par
+'gui_Singleton', gui_Singleton, ...\par
+'gui_OpeningFcn', @untitled_OpeningFcn, ...\par
+'gui_OutputFcn', @untitled_OutputFcn, ...\par
+'gui_LayoutFcn', [] , ...\par
+'gui_Callback', []);\par
+if nargin && ischar(varargin\{1\})\par
+gui_State.gui_Callback = str2func(varargin\{1\});\par
+end\par
+if nargout\par
+[varargout\{1:nargout\}] = gui_mainfcn(gui_State, varargin\{:\});\par
+else\par
+gui_mainfcn(gui_State, varargin\{:\});\par
+end\par
+% End initialization code - DO NOT EDIT\par
+% --- Executes just before untitled is made visible.\par
+function untitled_OpeningFcn(hObject, eventdata, handles, varargin)\par
+% This function has no output args, see OutputFcn.\par
+% hObject handle to figure\par
+% eventdata reserved - to be defined in a future version of MATLAB\par
+% handles structure with handles and user data (see GUIDATA)\par
+% varargin command line arguments to untitled (see VARARGIN)\par
+% Choose default command line output for untitled\par
+handles.output = hObject;\par
+% Update handles structure\par
+guidata(hObject, handles);\par
+% UIWAIT makes untitled wait for user response (see UIRESUME)\par
+% uiwait(handles.figure1);\par
+% --- Outputs from this function are returned to the command line.\par
+function varargout = untitled_OutputFcn(hObject, eventdata, handles)\par
+% varargout cell array for returning output args (see VARARGOUT);\par
+% hObject handle to figure\par
+% eventdata reserved - to be defined in a future version of MATLAB\par
+% handles structure with handles and user data (see GUIDATA)\par
+% Get default command line output from handles structure\par
+varargout\{1\} = handles.output;\par
+function edit1_Callback(hObject, eventdata, handles)\par
+% hObject handle to edit1 (see GCBO)\par
+% eventdata reserved - to be defined in a future version of MATLAB\par
+% handles structure with handles and user data (see GUIDATA)\par
+% Hints: get(hObject,'String') returns contents of edit1 as text\par
+% str2double(get(hObject,'String')) returns contents of edit1 as a double\par
+% --- Executes during object creation, after setting all properties.\par
+function edit1_CreateFcn(hObject, eventdata, handles)\par
+% hObject handle to edit1 (see GCBO)\par
+% eventdata reserved - to be defined in a future version of MATLAB\par
+% handles empty - handles not created until after all CreateFcns called\par
+% Hint: edit controls usually have a white background on Windows.\par
+% See ISPC and COMPUTER.\par
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))\par
+set(hObject,'BackgroundColor','white');\par
+end\par
+% --- Executes on button press in pushbutton1.\par
+function pushbutton1_Callback(hObject, eventdata, handles)\par
+% hObject handle to pushbutton1 (see GCBO)\par
+% eventdata reserved - to be defined in a future version of MATLAB\par
+% handles structure with handles and user data (see GUIDATA)\par
+%Capture and select face\par
+global image\par
+%global image1\par
+counter=1;\par
+vid=videoinput('winvideo',1);\par
+set(vid,'ReturnedColorSpace','RGB');\par
+for img=1:10;\par
+image=getsnapshot(vid);\par
+savename=strcat('C:\\MATLAB\\Venky_',num2str(img),'.png');\par
+imwrite(image,savename);\par
+faceDetector=vision.CascadeObjectDetector;\par
+I=imread(savename);\par
+bboxes= step(faceDetector,I);\par
+IFaces=insertObjectAnnotation(I,'rectangle',bboxes,'Face Detection');\par
+axes(handles.axes1);\par
+imshow(IFaces);\par
+i = 1;\par
+indexi = bboxes(i,:);\par
+facei = I(indexi(2):indexi(2)+indexi(4),indexi(1):indexi(1)+indexi(3),:);\par
+faceii=rgb2gray(facei);\par
+faceiii=imresize(faceii,[100,100]);\par
+savenameone=strcat('C:\\MATLAB\\Banku_',num2str(img),'.png');\par
+imwrite(faceiii,savenameone);\par
+axes(handles.axes2);\par
+imagesc(faceiii);\par
+end\par
+% --- Executes on button press in pushbutton2.\par
+function pushbutton2_Callback(hObject, eventdata, handles)\par
+% hObject handle to pushbutton2 (see GCBO)\par
+% eventdata reserved - to be defined in a future version of MATLAB\par
+% handles structure with handles and user data (see GUIDATA)\par
+%Viola Jones Face Detection and Face Capturing.\par
+global image\par
+counter=1;\par
+vid=videoinput('winvideo',1);\par
+set(vid,'ReturnedColorSpace','RGB');\par
+image=getsnapshot(vid);\par
+savename=strcat('C:\\MATLAB\\Banku_',num2str(counter),'.png');\par
+imwrite(image,savename);\par
+faceDetector=vision.CascadeObjectDetector;\par
+I=imread(savename);\par
+bboxes= step(faceDetector,I);\par
+IFaces=insertObjectAnnotation(I,'rectangle',bboxes,'Face Detection');\par
+axes(handles.axes1);\par
+imshow(IFaces);\par
+i = 1;\par
+indexi = bboxes(i,:);\par
+facei = I(indexi(2):indexi(2)+indexi(4),indexi(1):indexi(1)+indexi(3),:);\par
+faceii=rgb2gray(facei);\par
+faceiii=imresize(faceii,[100,100]);\par
+savenameone=strcat('C:\\MATLAB\\Detected_Face.png');\par
+imwrite(faceiii,savenameone);\par
+axes(handles.axes2);\par
+imagesc(faceiii);\par
+% --- Executes on button press in pushbutton3.\par
+function pushbutton3_Callback(hObject, eventdata, handles)\par
+% hObject handle to pushbutton3 (see GCBO)\par
+% eventdata reserved - to be defined in a future version of MATLAB\par
+% handles structure with handles and user data (see GUIDATA)\par
+%global vid\par
+input_dir = 'C:\\MATLAB\\Detectedfaces';\par
+image_dims = [100,100];\par
+counter=1;\par
+vid=videoinput('winvideo',1);\par
+set(vid,'ReturnedColorSpace','RGB');\par
+image=getsnapshot(vid);\par
+axes(handles.axes1);\par
+imshow(image);\par
+savename=strcat('C:\\MATLAB\\Vanku_',num2str(counter),'.png');\par
+imwrite(image,savename);\par
+faceDetector=vision.CascadeObjectDetector;\par
+I=imread(savename);\par
+bboxes= step(faceDetector,I);\par
+IFaces=insertObjectAnnotation(I,'rectangle',bboxes,'Face Detection');\par
+%figure;imshow(IFaces);\par
+i = 1;\par
+indexi = bboxes(i,:);\par
+facei = I(indexi(2):indexi(2)+indexi(4),indexi(1):indexi(1)+indexi(3),:);\par
+faceii=rgb2gray(facei);\par
+input_image=im2double(imresize(faceii,[100,100]));\par
+savenameone=strcat('C:\\MATLAB\\Matched.png');\par
+imwrite(input_image,savenameone);\par
+%imagesc(input_image);\par
+filenames = dir(fullfile(input_dir,'*.png'));\par
+num_images = numel(filenames);\par
+images = [];\par
+for n = 1:num_images\par
+filename = fullfile(input_dir, filenames(n).name);\par
+img = im2double(imread(filename));\par
+%subplot((num_images/2),(num_images/2),n); imshow(img);\par
+if n == 1\par
+images = zeros(prod(image_dims), num_images);\par
+end\par
+images(:, n) = img(:);\par
+%subplot(num_images,num_images,n); imshow(images);\par
+% steps 1 and 2: find the mean image and the mean-shifted input images\par
+mean_face = mean(images, 2);\par
+shifted_images = images - repmat(mean_face, 1, num_images);\par
+% steps 3 and 4: calculate the ordered eigenvectors and eigenvalues\par
+[evectors, score, evalues] = pca(images');\par
+% step 5: only retain the top 'num_eigenfaces' eigenvectors (i.e. the principal components)\par
+num_eigenfaces = 20;\par
+evectors = evectors(:, 1:num_eigenfaces);\par
+% step 6: project the images into the subspace to generate the feature vectors\par
+features = evectors' * shifted_images;\par
+end\par
+% calculate the similarity of the input to each training image\par
+feature_vec = evectors' * (input_image(:)- mean_face);\par
+similarity_score = arrayfun(@(n) 1 / (1 + norm(features(:,n) - feature_vec)), 1:num_images);\par
+% find the image with the highest similarity\par
+[match_score, match_ix] = max(similarity_score);\par
+% display the result\par
+axes(handles.axes2);\par
+imshow([input_image reshape(images(:,match_ix), image_dims)]);\par
+title(sprintf('matches %s, score %f', filenames(match_ix).name, match_score));\par
+% --- Executes on button press in pushbutton6.\par
+function pushbutton6_Callback(hObject, eventdata, handles)\par
+% hObject handle to pushbutton6 (see GCBO)\par
+% eventdata reserved - to be defined in a future version of MATLAB\par
+% handles structure with handles and user data (see GUIDATA)\par
+clear rpi\par
+rpi = raspi();\par
+for i = 1:10\par
+writeDigitalPin(rpi, 04, 1);\par
+pause(0.5);\par
+writeDigitalPin(rpi, 04, 0);\par
+pause(0.5);\par
+end\par
+}
+ 
